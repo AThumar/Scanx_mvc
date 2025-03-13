@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = "Upload PDF";
+}
+
+<h2>Upload PDF</h2>
+
+<input type="file" id="pdfUpload" />
+<button id="uploadBtn">Upload</button>
+
+<h3>File Name:</h3>
+<p id="fileName"></p>
+
+<div id="pdfViewer">
+    <h3>PDF Content</h3>
+    <textarea id="pdfContent" rows="10" cols="50"></textarea>
+</div>
+
+<div id="aiResponse">
+    <h3>AI Answer</h3>
+    <textarea id="aiOutput" rows="10" cols="50"></textarea>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="~/js/pdfUpload.js"></script>
