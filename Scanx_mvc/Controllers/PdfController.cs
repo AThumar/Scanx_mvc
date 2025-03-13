@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Scanx_mvc.Models;  // Add this line
 
 namespace Scanx_mvc.Controllers
 {
@@ -32,7 +33,7 @@ namespace Scanx_mvc.Controllers
                                     .ToList();
 
             // 🔹 Fix: Ensure the correct view is returned
-            return View("Upload", pdfFiles);
+            return View(pdfFiles); // ✅ This now returns List<Models.PdfFile>
         }
 
         [HttpPost]

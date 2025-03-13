@@ -1,6 +1,8 @@
-﻿public class PdfFile
+﻿namespace Scanx_mvc.Models  // Change the namespace to Models
 {
-    public int Id { get; set; }
-    public string FileName { get; set; } = string.Empty;
-    public string FilePath { get; set; } = string.Empty;
+    public class PdfFile
+    {
+        public string FileName { get; set; }
+        public string FilePath { get; set; }
+    }
 }
