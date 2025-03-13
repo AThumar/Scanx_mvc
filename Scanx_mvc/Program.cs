@@ -16,6 +16,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+app.UseDefaultFiles(); // ✅ Enables index.html
+app.UseStaticFiles();
 
 // ✅ Map Controllers
 app.MapControllers();
