@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Scanx_mvc.Models;
 
@@ -28,11 +28,17 @@ public class HomeController : Controller
     }
     public class HomeController : Controller
     {
+        public HomeController() // ✅ Constructor is fine without return statement
+        {
+            // Any initialization code here (if needed)
+        }
+
         public IActionResult Index()
         {
             return View();
         }
     }
+
 
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
