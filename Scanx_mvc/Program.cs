@@ -1,29 +1,23 @@
-var builder = WebApplication.CreateBuilder(args);
+﻿var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
-builder.Services.AddEndpointsApiExplorer();
+// ✅ Add MVC Controllers
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+// ✅ Allow Serving Static Files (like PDFs)
 app.UseStaticFiles();
-app.UseRouting();
-app.UseAuthorization();
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}");
-});
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.UseRouting();
+
+app.UseAuthorization();
+
+// ✅ Map Controllers
+app.MapControllers();
 
 app.Run();
