@@ -1,24 +1,40 @@
 ﻿@{
-    ViewBag.Title = "Upload PDF";
+    ViewData["Title"] = "Dashboard";
 }
 
-<h2>Upload PDF</h2>
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <img src="~/images/logo.png" alt="ScanX Logo">
+            <span>ScanX</span>
+        </div>
 
-<input type="file" id="pdfUpload" />
-<button id="uploadBtn">Upload</button>
+        <button class="upload-btn">+ Upload PDF</button>
 
-<h3>File Name:</h3>
-<p id="fileName"></p>
+        <nav>
+            <a href="#" class="active"><i class="icon">📂</i> Workshop</a>
+            <a href="#"><i class="icon">🛡</i> Upgrade</a>
+        </nav>
 
-<div id="pdfViewer">
-    <h3>PDF Content</h3>
-    <textarea id="pdfContent" rows="10" cols="50"></textarea>
+        <div class="storage-info">
+            <p>4 out of 5 PDFs Uploaded</p>
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+            <small>Upgrade to upload more PDFs</small>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header>
+            <div class="user-profile">N</div>
+        </header>
+
+        <section class="content-area">
+            <h2>Welcome to ScanX</h2>
+            <p>Upload and manage your scanned PDFs easily.</p>
+        </section>
+    </main>
 </div>
-
-<div id="aiResponse">
-    <h3>AI Answer</h3>
-    <textarea id="aiOutput" rows="10" cols="50"></textarea>
-</div>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="~/js/pdfUpload.js"></script>
