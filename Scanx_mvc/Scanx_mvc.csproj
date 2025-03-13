@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <PackageReference Include="iText7" Version="9.1.0" />
-    <PackageReference Include="iTextSharp" Version="5.5.13.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 

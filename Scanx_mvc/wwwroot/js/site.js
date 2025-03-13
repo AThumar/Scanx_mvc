@@ -1,8 +1,18 @@
-﻿
-// Write your JavaScript code.
+﻿function formatText(command) {
+    document.execCommand(command, false, null);
+}
+
+// Add event listeners to buttons
 document.addEventListener("DOMContentLoaded", function () {
-    let progress = document.querySelector(".progress");
-    let uploaded = 4; // Example
-    let total = 5; // Example
-    progress.style.width = (uploaded / total) * 100 + "%";
+    document.getElementById("boldBtn").addEventListener("click", function () {
+        formatText("bold");
+    });
+
+    document.getElementById("italicBtn").addEventListener("click", function () {
+        formatText("italic");
+    });
+
+    document.getElementById("underlineBtn").addEventListener("click", function () {
+        formatText("underline");
+    });
 });
