@@ -22,26 +22,11 @@ public class HomeController : Controller
     {
         return View();
     }
+
     public IActionResult Uploadpdf()
     {
         return View();
     }
-    public class HomeController : Controller
-    {
-        // REMOVE THIS CONSTRUCTOR IF IT'S NOT NEEDED
-        // public HomeController()
-        // {
-        //     // Any initialization code here
-        // }
-
-        public IActionResult Index()
-        {
-            return View();
-        }
-    }
-
-
-
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

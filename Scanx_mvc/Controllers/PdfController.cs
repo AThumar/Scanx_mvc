@@ -1,77 +1,65 @@
-﻿using System.IO;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using iText.Kernel.Pdf;
-using iText.Kernel.Pdf.Canvas.Parser;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace Scanx_mvc.Controllers
 {
     public class PdfController : Controller
     {
-        private readonly string _uploadsFolder;
+        private readonly IWebHostEnvironment _env;
 
-        public PdfController()
+        public PdfController(IWebHostEnvironment env)
         {
-            _uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
-
-            if (!Directory.Exists(_uploadsFolder))
-            {
-                Directory.CreateDirectory(_uploadsFolder);
-            }
+            _env = env;
         }
 
-        // ✅ 1️⃣ Upload PDF File
-        [HttpPost("Pdf/Upload")]
-        public IActionResult Upload(IFormFile file)
+        public IActionResult Upload()
         {
-            if (file == null || file.Length == 0)
+            string uploadPath = Path.Combine(_env.WebRootPath, "uploads");
+            if (!Directory.Exists(uploadPath))
             {
-                return BadRequest("No file selected.");
+                Directory.CreateDirectory(uploadPath);
             }
 
-            string filePath = Path.Combine(_uploadsFolder, file.FileName);
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                file.CopyTo(stream);
-            }
+            // Get list of uploaded PDFs
+            var pdfFiles = Directory.GetFiles(uploadPath, "*.pdf")
+                                    .Select(file => new PdfFile
+                                    {
+                                        FileName = Path.GetFileName(file),
+                                        FilePath = $"/uploads/{Path.GetFileName(file)}"
+                                    })
+                                    .ToList();
 
-            // ✅ Return a public URL for the uploaded file
-            string fileUrl = $"/uploads/{file.FileName}";
-
-            return Ok(new { fileUrl });
+            // 🔹 Fix: Ensure the correct view is returned
+            return View("Uploadpdf", pdfFiles);
         }
 
-        // ✅ 2️⃣ View PDF in Browser
-        [HttpGet("Pdf/View")]
-        public IActionResult ViewPdf(string fileName)
+        [HttpPost]
+        public IActionResult UploadPdf(IFormFile file)
         {
-            string fileUrl = $"/uploads/{fileName}";
-            return Ok(new { fileUrl });
-        }
-
-        // ✅ 3️⃣ Extract Text from PDF
-        [HttpGet("Pdf/ExtractText")]
-        public IActionResult ExtractText(string fileName)
-        {
-            string filePath = Path.Combine(_uploadsFolder, fileName);
-
-            if (!System.IO.File.Exists(filePath))
+            if (file != null && file.Length > 0)
             {
-                return NotFound("File not found.");
-            }
-
-            using (PdfReader reader = new PdfReader(filePath))
-            using (PdfDocument pdfDoc = new PdfDocument(reader))
-            {
-                System.Text.StringBuilder extractedText = new System.Text.StringBuilder();
-
-                for (int i = 1; i <= pdfDoc.GetNumberOfPages(); i++)
+                string uploadPath = Path.Combine(_env.WebRootPath, "uploads");
+                if (!Directory.Exists(uploadPath))
                 {
-                    extractedText.AppendLine(PdfTextExtractor.GetTextFromPage(pdfDoc.GetPage(i)));
+                    Directory.CreateDirectory(uploadPath);
                 }
 
-                return Ok(new { extractedText = extractedText.ToString() });
+                string filePath = Path.Combine(uploadPath, file.FileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                }
             }
+
+            return RedirectToAction("Upload");
         }
+    }
+
+    public class PdfFile
+    {
+        public string FileName { get; set; }
+        public string FilePath { get; set; }
     }
 }

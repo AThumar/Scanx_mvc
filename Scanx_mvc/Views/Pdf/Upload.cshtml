@@ -1,0 +1,54 @@
+﻿@model List<PdfFile>
+@await Html.PartialAsync("_PdfListPartial", Model)
+
+@{
+    ViewData["Title"] = "Uploaded PDFs";
+}
+
+<div class="container">
+    <h2>Uploaded PDFs</h2>
+
+    <!-- Upload Form -->
+    <form asp-action="UploadPdf" asp-controller="Pdf" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" class="form-control mb-3" required />
+        <button type="submit" class="btn btn-primary">Upload PDF</button>
+    </form>
+
+    <hr />
+
+    <!-- PDF List -->
+    <div class="row">
+        @foreach (var pdf in Model)
+        {
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <img src="https://img.icons8.com/ios-filled/50/000000/pdf.png" class="card-img-top" alt="PDF Icon">
+                    <div class="card-body">
+                        <h5 class="card-title">@pdf.FileName</h5>
+                        <a href="@pdf.FilePath" target="_blank" class="btn btn-outline-primary">View PDF</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Add some CSS for better styling -->
+<style>
+    .card {
+        margin: 10px;
+        padding: 10px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+        .card img {
+            width: 50px;
+            height: 50px;
+            margin: auto;
+        }
+
+    .card-body {
+        text-align: center;
+    }
+</style>

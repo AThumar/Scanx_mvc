@@ -1,25 +1,26 @@
 ﻿var builder = WebApplication.CreateBuilder(args);
 
-// ✅ Add MVC Controllers
-builder.Services.AddControllers();
+// Add services to the container.
+builder.Services.AddControllersWithViews(); // ✅ This is necessary for MVC Views
 
 var app = builder.Build();
 
+// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
 }
 
-// ✅ Allow Serving Static Files (like PDFs)
+app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 
 app.UseAuthorization();
-app.UseDefaultFiles(); // ✅ Enables index.html
-app.UseStaticFiles();
 
-// ✅ Map Controllers
-app.MapControllers();
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
