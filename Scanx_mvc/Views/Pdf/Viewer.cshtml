@@ -72,3 +72,34 @@
         display: none;
     }
 </style>
+<script>
+    // Load PDF into the viewer dynamically
+    function loadPDF(pdfUrl) {
+        document.getElementById("pdfViewer").src = pdfUrl;
+    }
+
+    // Text Formatting
+    function formatText(command) {
+        document.execCommand(command, false, null);
+    }
+
+    // AI Answering Functionality
+    function askAI() {
+        let selectedText = window.getSelection().toString().trim();
+        if (selectedText === "") {
+            alert("Please select a question from the document first.");
+            return;
+        }
+
+        // Simulate AI searching from the document content
+        let pdfText = "This is sample text extracted from the uploaded document. Steve Jobs founded Apple."; // Example Text
+        let aiAnswerBox = document.getElementById("aiAnswer");
+
+        if (pdfText.includes(selectedText)) {
+            aiAnswerBox.innerHTML = `<strong>AI Answer:</strong> ${selectedText} exists in the document.`;
+        } else {
+            aiAnswerBox.innerHTML = `<strong>AI Answer:</strong> No matching answer found in the document.`;
+        }
+        aiAnswerBox.style.display = "block";
+    }
+</script>
