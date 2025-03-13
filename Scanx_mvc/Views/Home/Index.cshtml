@@ -1,26 +1,17 @@
 ﻿@{
-    ViewData["Title"] = "Dashboard";
-    var uploadDirectory = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", "uploads");
-
-    // Ensure directory exists before accessing it
-    if (!System.IO.Directory.Exists(uploadDirectory))
-    {
-        System.IO.Directory.CreateDirectory(uploadDirectory);
-    }
-
-    var pdfFiles = System.IO.Directory.Exists(uploadDirectory) ? System.IO.Directory.GetFiles(uploadDirectory) : new string[0];
+    ViewBag.Title = "Dashboard";
+    var uploadedFiles = ViewBag.UploadedFiles as List<string>;
 }
-
 
 <div class="dashboard-container">
     <!-- Sidebar -->
-    <aside class="sidebar">
+    <div class="sidebar">
         <div class="logo">
-            <img src="~/images/logo.png" alt="ScanX Logo" class="logo">
+            <img src="~/images/Logo.png" alt="ScanX Logo" class="logo">
         </div>
 
         <!-- Upload PDF Button -->
-        <button class="upload-btn" onclick="window.location.href='@Url.Action("Uploadpdf", "Home")'">+ Upload PDF</button>
+        <button class="upload-btn" onclick="openUploadModal()">+ Upload PDF</button>
 
         <nav class="sidebar-nav">
             <a href="#" class="nav-item active">
@@ -30,117 +21,50 @@
                 <img src="~/images/shield.png" class="icon" alt="Upgrade"> Upgrade
             </a>
         </nav>
-    </aside>
+    </div>
 
     <!-- Content Area -->
-    <section class="content-area">
-        <h2>Welcome to ScanX</h2>
-        <p>Upload and manage your scanned PDFs easily.</p>
-
-        <!-- Uploaded PDFs List -->
-        <div class="pdf-list">
-            <h3>Uploaded PDFs</h3>
-            <ul>
-                @foreach (var file in pdfFiles)
+    <div class="content-area">
+        <h2>Uploaded PDFs</h2>
+        <div class="pdf-container">
+            @if (uploadedFiles != null && uploadedFiles.Count > 0)
+            {
+                foreach (var file in uploadedFiles)
                 {
-                    <li>
-                        <a href="@Url.Content("~/uploads/" + System.IO.Path.GetFileName(file))" target="_blank">
-                            @System.IO.Path.GetFileName(file)
-                        </a>
-                    </li>
+                    <div class="pdf-item">
+                        <img src="~/images/pdf-icon.png" class="pdf-icon" alt="PDF">
+                        <p>@Path.GetFileNameWithoutExtension(file)</p>
+                    </div>
                 }
-
-            </ul>
+            }
+            else
+            {
+                <p>No files uploaded yet.</p>
+            }
         </div>
-    </section>
-</div>
-
-<!-- Upload Modal -->
-<!-- Upload Modal -->
-<div id="uploadModal" class="modal">
-    <div class="modal-content">
-        <span class="close" id="closeModal">&times;</span>
-        <h2 class="modal-title">Upload Pdf File</h2>
-
-        <label for="pdfFile" class="modal-label">Select a file to Upload</label>
-        <input type="file" id="pdfFile" name="pdfFile" required class="modal-input">
-
-        <label for="fileName" class="modal-label">File Name *</label>
-        <input type="text" id="fileName" name="fileName" placeholder="File Name" required class="modal-input">
-
-        <div class="modal-buttons">
-            <button class="close-btn" id="closeModalBtn">Close</button>
-            <button class="upload-btn" id="uploadSubmit">Upload</button>
-        </div>
-
-        <p id="uploadStatus"></p>
     </div>
 </div>
 
+<!-- Upload Modal -->
+<div id="uploadModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeUploadModal()">&times;</span>
+        <h2>Upload Pdf File</h2>
+        <form asp-controller="Pdf" asp-action="Upload" method="post" enctype="multipart/form-data">
+            <label>Select a file to Upload</label>
+            <input type="file" name="file" required />
+            <label>File Name *</label>
+            <input type="text" name="fileName" required />
+            <button type="submit">Upload</button>
+        </form>
+    </div>
+</div>
 
-
-
-<!-- JavaScript for Handling Uploads -->
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const uploadModal = document.getElementById("uploadModal");
-        const openUploadModalBtn = document.getElementById("openUploadModal");
-        const closeModalBtns = document.querySelectorAll("#closeModal, #closeModalBtn");
-
-        // Open Modal
-        openUploadModalBtn.addEventListener("click", function () {
-            uploadModal.style.display = "flex";
-        });
-
-        // Close Modal (For both "X" and "Close" button)
-        closeModalBtns.forEach(btn => {
-            btn.addEventListener("click", function () {
-                uploadModal.style.display = "none";
-            });
-        });
-
-        // Close modal when clicking outside the modal content
-        window.addEventListener("click", function (event) {
-            if (event.target === uploadModal) {
-                uploadModal.style.display = "none";
-            }
-        });
-
-        // Handle file upload
-        document.getElementById("uploadSubmit").addEventListener("click", async function (event) {
-            event.preventDefault();
-
-            let fileInput = document.getElementById("pdfFile");
-            let fileNameInput = document.getElementById("fileName");
-            let uploadStatus = document.getElementById("uploadStatus");
-
-            if (!fileInput.files.length) {
-                uploadStatus.innerText = "Please select a file!";
-                return;
-            }
-
-            let formData = new FormData();
-            formData.append("pdfFile", fileInput.files[0]);
-            formData.append("fileName", fileNameInput.value);
-
-            try {
-                let response = await fetch("/api/pdf/upload", {
-                    method: "POST",
-                    body: formData
-                });
-
-                let result = await response.json();
-
-                if (result.success) {
-                    uploadStatus.innerText = "Upload successful!";
-                    setTimeout(() => location.reload(), 1000);
-                } else {
-                    uploadStatus.innerText = "Upload failed: " + result.error;
-                }
-            } catch (error) {
-                uploadStatus.innerText = "Error uploading file.";
-            }
-        });
-    });
+    function openUploadModal() {
+        document.getElementById("uploadModal").style.display = "block";
+    }
+    function closeUploadModal() {
+        document.getElementById("uploadModal").style.display = "none";
+    }
 </script>
-

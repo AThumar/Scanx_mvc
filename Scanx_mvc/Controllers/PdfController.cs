@@ -1,43 +1,52 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace Scanx_mvc.Controllers
 {
     public class PdfController : Controller
     {
-        private readonly string uploadDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+        private readonly string _uploadPath;
 
         public PdfController()
         {
-            if (!Directory.Exists(uploadDirectory))
+            _uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+            if (!Directory.Exists(_uploadPath))
             {
-                Directory.CreateDirectory(uploadDirectory);
+                Directory.CreateDirectory(_uploadPath);
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> UploadFile(IFormFile pdfFile, string fileName)
+        public IActionResult Index()
         {
-            if (pdfFile == null || pdfFile.Length == 0)
-                return Json(new { success = false, error = "No file selected" });
+            var files = Directory.GetFiles(_uploadPath);
+            List<string> fileNames = new List<string>();
 
-            string filePath = Path.Combine(uploadDirectory, fileName + ".pdf");
-
-            try
+            foreach (var file in files)
             {
+                fileNames.Add(Path.GetFileName(file));
+            }
+
+            ViewBag.UploadedFiles = fileNames;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Upload(IFormFile file, string fileName)
+        {
+            if (file != null && file.Length > 0)
+            {
+                string filePath = Path.Combine(_uploadPath, fileName + ".pdf");
+
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
-                    await pdfFile.CopyToAsync(stream);
+                    file.CopyTo(stream);
                 }
-                return Json(new { success = true });
             }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, error = ex.Message });
-            }
+
+            return RedirectToAction("Index");
         }
     }
 }
