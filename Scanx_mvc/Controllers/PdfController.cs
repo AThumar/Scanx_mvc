@@ -16,27 +16,38 @@ public class PdfController : ControllerBase
     }
 
     // 📌 Upload PDF and Extract Text
-    [HttpPost("upload")]
-    public async Task<IActionResult> UploadPdf([FromForm] IFormFile file)
+    [HttpPost]
+    public async Task<IActionResult> Upload(IFormFile pdfFile, string fileName)
     {
-        if (file == null || file.Length == 0)
-            return BadRequest(new { success = false, message = "No file uploaded" });
+        if (pdfFile == null || pdfFile.Length == 0)
+        {
+            ModelState.AddModelError("", "Please select a file.");
+            return BadRequest(new { error = "Please select a file." });
+        }
 
-        string uploadsFolder = Path.Combine(_env.WebRootPath, "UploadedPdfs");
-        Directory.CreateDirectory(uploadsFolder);
-        string filePath = Path.Combine(uploadsFolder, file.FileName);
+        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+        Directory.CreateDirectory(uploadsFolder); // Ensure the directory exists
+
+        var filePath = Path.Combine(uploadsFolder, fileName + Path.GetExtension(pdfFile.FileName));
 
         using (var stream = new FileStream(filePath, FileMode.Create))
         {
-            await file.CopyToAsync(stream);
+            await pdfFile.CopyToAsync(stream);
         }
 
-        string extractedText = ExtractTextFromPdf(filePath);
-        return Ok(new { success = true, fileName = file.FileName, text = extractedText });
+        return RedirectToAction("Index");
     }
 
-    // 📌 Extract text from PDF
-    private string ExtractTextFromPdf(string filePath)
+    // 📌 Send extracted text to AI for response
+    [HttpPost("ai-answer")]
+    public async Task<IActionResult> GetAiAnswer([FromBody] AiRequestModel request)
+    {
+        string aiResponse = await GetAiResponse(request.Text);
+        return Ok(new { success = true, fileName = request.FileName, answer = aiResponse });
+    }
+
+    // 📌 Extract text from PDF (STATIC)
+    private static string ExtractTextFromPdf(string filePath)
     {
         using var pdfReader = new PdfReader(filePath);
         using var pdfDocument = new PdfDocument(pdfReader);
@@ -49,16 +60,8 @@ public class PdfController : ControllerBase
         return text;
     }
 
-    // 📌 Send extracted text to AI for response
-    [HttpPost("ai-answer")]
-    public async Task<IActionResult> GetAiAnswer([FromBody] AiRequestModel request)
-    {
-        string aiResponse = await GetAiResponse(request.Text);
-        return Ok(new { success = true, fileName = request.FileName, answer = aiResponse });
-    }
-
-    // 📌 OpenAI API Call
-    private async Task<string> GetAiResponse(string inputText)
+    // 📌 OpenAI API Call (STATIC)
+    private static async Task<string> GetAiResponse(string inputText)
     {
         string apiKey = "YOUR_OPENAI_API_KEY";
         string endpoint = "https://api.openai.com/v1/chat/completions";
@@ -89,4 +92,3 @@ public class AiRequestModel
     public string Text { get; set; }
     public string FileName { get; set; }
 }
-

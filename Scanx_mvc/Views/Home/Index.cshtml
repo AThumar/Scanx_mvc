@@ -1,5 +1,8 @@
-﻿@{
+﻿
+
+@{
     ViewData["Title"] = "Dashboard";
+    var pdfFiles = Directory.GetFiles(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", "uploads"));
 }
 
 <div class="dashboard-container">
@@ -9,7 +12,8 @@
             <img src="~/images/logo.png" alt="ScanX Logo" class="logo">
         </div>
 
-        <button class="upload-btn">+ Upload PDF</button>
+        <!-- Upload PDF Button -->
+        <button class="upload-btn" id="openUploadModal">+ Upload PDF</button>
 
         <nav class="sidebar-nav">
             <a href="#" class="nav-item active">
@@ -21,11 +25,95 @@
         </nav>
     </aside>
 
-  
-        <!-- Content Area -->
-        <section class="content-area">
-            <h2>Welcome to ScanX</h2>
-            <p>Upload and manage your scanned PDFs easily.</p>
-        </section>
-    </main>
+    <!-- Content Area -->
+    <section class="content-area">
+        <h2>Welcome to ScanX</h2>
+        <p>Upload and manage your scanned PDFs easily.</p>
+
+        <!-- Uploaded PDFs List -->
+        <div class="pdf-list">
+            <h3>Uploaded PDFs</h3>
+            <ul>
+                @foreach (var file in pdfFiles)
+                {
+                    <li>
+                        <a href="@Url.Content("~/uploads/" + System.IO.Path.GetFileName(file))" target="_blank">
+                            @System.IO.Path.GetFileName(file)
+                        </a>
+                    </li>
+                }
+
+            </ul>
+        </div>
+    </section>
 </div>
+
+<!-- Upload Modal -->
+<div id="uploadModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeModal">&times;</span>
+        <h2>Upload PDF</h2>
+        <form id="uploadForm">
+            <input type="file" id="pdfFile" name="pdfFile" required>
+            <input type="text" id="fileName" name="fileName" placeholder="Enter file name" required>
+            <button type="submit">Upload</button>
+        </form>
+        <p id="uploadStatus"></p>
+    </div>
+</div>
+
+<!-- JavaScript for Handling Uploads -->
+<script>
+    document.getElementById("openUploadModal").addEventListener("click", function () {
+        document.getElementById("uploadModal").style.display = "block";
+    });
+
+    document.getElementById("closeModal").addEventListener("click", function () {
+        document.getElementById("uploadModal").style.display = "none";
+    });
+
+    document.getElementById("uploadForm").addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        let formData = new FormData();
+        formData.append("pdfFile", document.getElementById("pdfFile").files[0]);
+        formData.append("fileName", document.getElementById("fileName").value);
+
+        let response = await fetch("/api/pdf/upload", {
+            method: "POST",
+            body: formData
+        });
+
+        let result = await response.json();
+
+        if (result.success) {
+            document.getElementById("uploadStatus").innerText = "Upload successful!";
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            document.getElementById("uploadStatus").innerText = "Upload failed: " + result.error;
+        }
+    });
+</script>
+
+<!-- Styles for Modal (Add to CSS File) -->
+<style>
+    .modal {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 20px;
+        box-shadow: 0px 0px 10px gray;
+    }
+    .modal-content {
+        display: flex;
+        flex-direction: column;
+    }
+    .close {
+        cursor: pointer;
+        float: right;
+        font-size: 20px;
+    }
+</style>
