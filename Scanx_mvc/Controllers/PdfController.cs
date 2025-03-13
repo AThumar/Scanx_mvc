@@ -34,19 +34,33 @@ namespace Scanx_mvc.Controllers
         }
 
         [HttpPost]
-        public IActionResult Upload(IFormFile file, string fileName)
+        public IActionResult Upload(IFormFile file)
         {
-            if (file != null && file.Length > 0)
+            if (file == null || file.Length == 0)
             {
-                string filePath = Path.Combine(_uploadPath, fileName + ".pdf");
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    file.CopyTo(stream);
-                }
+                TempData["Error"] = "Please select a valid file.";
+                return RedirectToAction("Index");
             }
 
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
+            if (!Directory.Exists(uploadsFolder))
+            {
+                Directory.CreateDirectory(uploadsFolder);
+            }
+
+            var filePath = Path.Combine(uploadsFolder, file.FileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+
+            TempData["Message"] = "File uploaded successfully!";
             return RedirectToAction("Index");
         }
+
+
+            }
+
     }
-}
+

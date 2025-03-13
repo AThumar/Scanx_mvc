@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Uploaded PDFs";
+}
+
+<h2>Uploaded PDFs</h2>
+
+@if (TempData["Message"] != null)
+{
+    <p style="color: green;">@TempData["Message"]</p>
+}
+
+@if (TempData["Error"] != null)
+{
+    <p style="color: red;">@TempData["Error"]</p>
+}
