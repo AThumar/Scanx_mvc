@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Microsoft.AspNetCore.Mvc;
-using iTextSharp.text.pdf;
-using iTextSharp.text.pdf.parser;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas.Parser;
 
 public class PdfController : Controller
 {
@@ -23,14 +23,16 @@ public class PdfController : Controller
     // ✅ Step 2: Make the method static (Fix Warning CA1822)
     public static string ExtractTextFromPdf(string filePath)
     {
-        using PdfReader reader = new(filePath);
+        using PdfReader reader = new PdfReader(filePath);
+        using PdfDocument pdfDoc = new PdfDocument(reader);
         StringWriter output = new();
 
-        for (int i = 1; i <= reader.NumberOfPages; i++)
+        for (int i = 1; i <= pdfDoc.GetNumberOfPages(); i++)
         {
-            output.WriteLine(PdfTextExtractor.GetTextFromPage(reader, i));
+            output.WriteLine(PdfTextExtractor.GetTextFromPage(pdfDoc.GetPage(i)));
         }
 
         return output.ToString();
     }
+
 }
