@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser;
+[Route("Pdf")]
 
 public class PdfController : Controller
 {
@@ -33,6 +34,32 @@ public class PdfController : Controller
         }
 
         return output.ToString();
+    }
+    [HttpPost]
+    public IActionResult Upload(IFormFile file)
+    {
+        if (file == null || file.Length == 0)
+        {
+            return BadRequest("No file selected.");
+        }
+
+        // Define upload folder
+        string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+
+        // Create directory if it doesn't exist
+        if (!Directory.Exists(folderPath))
+        {
+            Directory.CreateDirectory(folderPath);
+        }
+
+        // Save the uploaded file
+        string filePath = Path.Combine(folderPath, file.FileName);
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            file.CopyTo(stream);
+        }
+
+        return Ok(new { filePath });
     }
 
 }
