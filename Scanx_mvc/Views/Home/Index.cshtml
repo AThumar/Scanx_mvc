@@ -33,7 +33,7 @@
                 {
                     <div class="pdf-item">
                         <img src="~/images/pdf-icon.png" class="pdf-icon" alt="PDF">
-                        <p>@Path.GetFileNameWithoutExtension(file)</p>
+                        <p>@System.IO.Path.GetFileNameWithoutExtension(file)</p>
                     </div>
                 }
             }
