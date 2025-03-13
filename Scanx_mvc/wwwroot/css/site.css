@@ -6,6 +6,10 @@
     font-family: Arial, sans-serif;
 }
 
+body {
+    background: #fff;
+}
+
 /* Layout */
 .dashboard-container {
     display: flex;
@@ -33,6 +37,7 @@
 
     .logo img {
         width: 30px;
+        height: auto;
         margin-right: 10px;
     }
 
@@ -56,11 +61,13 @@
 nav a {
     display: flex;
     align-items: center;
-    padding: 10px;
+    padding: 12px;
     color: black;
     text-decoration: none;
     border-radius: 5px;
-    margin: 5px 0;
+    margin: 8px 0;
+    font-size: 14px;
+    font-weight: bold;
 }
 
     nav a:hover, nav a.active {
@@ -68,7 +75,9 @@ nav a {
     }
 
 .icon {
-    margin-right: 10px;
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
 }
 
 /* Storage Info */
@@ -98,12 +107,31 @@ nav a {
     padding: 20px;
 }
 
-header {
+/* Top Navigation Bar */
+.top-nav {
     display: flex;
-    justify-content: flex-end;
-    padding: 10px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
 }
 
+    .top-nav h2 {
+        font-size: 20px;
+    }
+
+    .top-nav nav a {
+        margin-left: 15px;
+        color: black;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+        .top-nav nav a:hover {
+            text-decoration: underline;
+        }
+
+/* User Profile Icon */
 .user-profile {
     width: 35px;
     height: 35px;
@@ -120,5 +148,5 @@ header {
 
 /* Content Area */
 .content-area {
-    margin-top: 20px;
+    margin-top: 40px;
 }
