@@ -1,9 +1,16 @@
-﻿
-
-@{
+﻿@{
     ViewData["Title"] = "Dashboard";
-    var pdfFiles = Directory.GetFiles(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", "uploads"));
+    var uploadDirectory = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+
+    // Ensure directory exists before accessing it
+    if (!System.IO.Directory.Exists(uploadDirectory))
+    {
+        System.IO.Directory.CreateDirectory(uploadDirectory);
+    }
+
+    var pdfFiles = System.IO.Directory.Exists(uploadDirectory) ? System.IO.Directory.GetFiles(uploadDirectory) : new string[0];
 }
+
 
 <div class="dashboard-container">
     <!-- Sidebar -->
@@ -52,19 +59,27 @@
 <div id="uploadModal" class="modal">
     <div class="modal-content">
         <span class="close" id="closeModal">&times;</span>
-        <h2>Upload PDF</h2>
-        <form id="uploadForm">
-            <input type="file" id="pdfFile" name="pdfFile" required>
-            <input type="text" id="fileName" name="fileName" placeholder="Enter file name" required>
-            <button type="submit">Upload</button>
-        </form>
+        <h2>Upload Pdf File</h2>
+
+        <label for="pdfFile">Select a file to Upload</label>
+        <input type="file" id="pdfFile" name="pdfFile" required>
+
+        <label for="fileName">File Name *</label>
+        <input type="text" id="fileName" name="fileName" placeholder="File Name" required>
+
+        <div style="display: flex; justify-content: space-between;">
+            <button class="close-btn" id="closeModalBtn">Close</button>
+            <button class="upload-btn" id="uploadSubmit">Upload</button>
+        </div>
+
         <p id="uploadStatus"></p>
     </div>
 </div>
 
+
 <!-- JavaScript for Handling Uploads -->
 <script>
-    document.getElementById("openUploadModal").addEventListener("click", function () {
+        document.getElementById("openUploadModal").addEventListener("click", function () {
         document.getElementById("uploadModal").style.display = "block";
     });
 
@@ -72,7 +87,11 @@
         document.getElementById("uploadModal").style.display = "none";
     });
 
-    document.getElementById("uploadForm").addEventListener("submit", async function (event) {
+    document.getElementById("closeModalBtn").addEventListener("click", function () {
+        document.getElementById("uploadModal").style.display = "none";
+    });
+
+    document.getElementById("uploadSubmit").addEventListener("click", async function (event) {
         event.preventDefault();
 
         let formData = new FormData();
@@ -93,6 +112,8 @@
             document.getElementById("uploadStatus").innerText = "Upload failed: " + result.error;
         }
     });
+
+    
 </script>
 
 <!-- Styles for Modal (Add to CSS File) -->
