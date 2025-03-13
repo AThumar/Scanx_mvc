@@ -20,7 +20,7 @@
         </div>
 
         <!-- Upload PDF Button -->
-        <button class="upload-btn" id="openUploadModal">+ Upload PDF</button>
+        <button class="upload-btn" onclick="location.href='@Url.Action("Uploadpdf", "Home")'">+ Upload PDF</button>
 
         <nav class="sidebar-nav">
             <a href="#" class="nav-item active">
@@ -56,6 +56,7 @@
 </div>
 
 <!-- Upload Modal -->
+<!-- Upload Modal -->
 <div id="uploadModal" class="modal">
     <div class="modal-content">
         <span class="close" id="closeModal">&times;</span>
@@ -76,119 +77,70 @@
     </div>
 </div>
 
-<!-- Updated Styles -->
-<style>
-    /* Modal Styling */
-    .modal {
-        display: none;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: white;
-        padding: 30px;
-        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-        border-radius: 8px;
-        width: 400px;
-        max-width: 90%;
-    }
 
-    .modal-content {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
 
-    .modal-title {
-        font-size: 20px;
-        font-weight: bold;
-        margin-bottom: 10px;
-    }
 
-    .modal-label {
-        font-size: 14px;
-        font-weight: 600;
-        margin-bottom: 5px;
-    }
-
-    .modal-input {
-        padding: 8px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 14px;
-    }
-
-    .modal-buttons {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 15px;
-    }
-
-    .close-btn, .upload-btn {
-        padding: 8px 15px;
-        font-size: 14px;
-        border: none;
-        cursor: pointer;
-        border-radius: 5px;
-        transition:
-        <!-- JavaScript for Handling Uploads -->
+<!-- JavaScript for Handling Uploads -->
 <script>
-        document.getElementById("openUploadModal").addEventListener("click", function () {
-        document.getElementById("uploadModal").style.display = "block";
-    });
+    document.addEventListener("DOMContentLoaded", function () {
+        const uploadModal = document.getElementById("uploadModal");
+        const openUploadModalBtn = document.getElementById("openUploadModal");
+        const closeModalBtns = document.querySelectorAll("#closeModal, #closeModalBtn");
 
-    document.getElementById("closeModal").addEventListener("click", function () {
-        document.getElementById("uploadModal").style.display = "none";
-    });
-
-    document.getElementById("closeModalBtn").addEventListener("click", function () {
-        document.getElementById("uploadModal").style.display = "none";
-    });
-
-    document.getElementById("uploadSubmit").addEventListener("click", async function (event) {
-        event.preventDefault();
-
-        let formData = new FormData();
-        formData.append("pdfFile", document.getElementById("pdfFile").files[0]);
-        formData.append("fileName", document.getElementById("fileName").value);
-
-        let response = await fetch("/api/pdf/upload", {
-            method: "POST",
-            body: formData
+        // Open Modal
+        openUploadModalBtn.addEventListener("click", function () {
+            uploadModal.style.display = "flex";
         });
 
-        let result = await response.json();
+        // Close Modal (For both "X" and "Close" button)
+        closeModalBtns.forEach(btn => {
+            btn.addEventListener("click", function () {
+                uploadModal.style.display = "none";
+            });
+        });
 
-        if (result.success) {
-            document.getElementById("uploadStatus").innerText = "Upload successful!";
-            setTimeout(() => location.reload(), 1000);
-        } else {
-            document.getElementById("uploadStatus").innerText = "Upload failed: " + result.error;
-        }
+        // Close modal when clicking outside the modal content
+        window.addEventListener("click", function (event) {
+            if (event.target === uploadModal) {
+                uploadModal.style.display = "none";
+            }
+        });
+
+        // Handle file upload
+        document.getElementById("uploadSubmit").addEventListener("click", async function (event) {
+            event.preventDefault();
+
+            let fileInput = document.getElementById("pdfFile");
+            let fileNameInput = document.getElementById("fileName");
+            let uploadStatus = document.getElementById("uploadStatus");
+
+            if (!fileInput.files.length) {
+                uploadStatus.innerText = "Please select a file!";
+                return;
+            }
+
+            let formData = new FormData();
+            formData.append("pdfFile", fileInput.files[0]);
+            formData.append("fileName", fileNameInput.value);
+
+            try {
+                let response = await fetch("/api/pdf/upload", {
+                    method: "POST",
+                    body: formData
+                });
+
+                let result = await response.json();
+
+                if (result.success) {
+                    uploadStatus.innerText = "Upload successful!";
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    uploadStatus.innerText = "Upload failed: " + result.error;
+                }
+            } catch (error) {
+                uploadStatus.innerText = "Error uploading file.";
+            }
+        });
     });
-
-    
 </script>
 
-<!-- Styles for Modal (Add to CSS File) -->
-<style>
-    .modal {
-        display: none;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: white;
-        padding: 20px;
-        box-shadow: 0px 0px 10px gray;
-    }
-    .modal-content {
-        display: flex;
-        flex-direction: column;
-    }
-    .close {
-        cursor: pointer;
-        float: right;
-        font-size: 20px;
-    }
-</style>

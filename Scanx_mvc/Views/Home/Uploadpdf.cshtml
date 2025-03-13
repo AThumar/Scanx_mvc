@@ -1,9 +1,73 @@
-﻿<form asp-controller="Pdf" asp-action="Upload" method="post" enctype="multipart/form-data">
-    <label>Select a file to Upload</label>
-    <input type="file" name="pdfFile" required />
+﻿@{
+    ViewBag.Title = "Upload PDF";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Use the main layout (if applicable)
+}
 
-    <label>File Name *</label>
-    <input type="text" name="fileName" required />
+<div class="upload-modal">
+    <div class="modal-content">
+        <span class="close" id="closeModal">&times;</span>
+        <h2>Upload Pdf File</h2>
 
-    <button type="submit">Upload</button>
-</form>
+        <label>Select a file to Upload</label>
+        <input type="file" id="pdfFile" name="pdfFile" required>
+
+        <label>File Name *</label>
+        <input type="text" id="fileName" name="fileName" placeholder="File Name" required>
+
+        <div class="modal-buttons">
+            <button class="close-btn" id="closeModalBtn">Close</button>
+            <button class="upload-btn" id="uploadSubmit">Upload</button>
+        </div>
+
+        <p id="uploadStatus"></p>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const closeModalBtns = document.querySelectorAll("#closeModal, #closeModalBtn");
+
+        // Close Modal
+        closeModalBtns.forEach(btn => {
+            btn.addEventListener("click", function () {
+                window.history.back(); // Go back to the previous page (Index)
+            });
+        });
+
+        // Handle file upload
+        document.getElementById("uploadSubmit").addEventListener("click", async function (event) {
+            event.preventDefault();
+
+            let fileInput = document.getElementById("pdfFile");
+            let fileNameInput = document.getElementById("fileName");
+            let uploadStatus = document.getElementById("uploadStatus");
+
+            if (!fileInput.files.length) {
+                uploadStatus.innerText = "Please select a file!";
+                return;
+            }
+
+            let formData = new FormData();
+            formData.append("pdfFile", fileInput.files[0]);
+            formData.append("fileName", fileNameInput.value);
+
+            try {
+                let response = await fetch("/Pdf/UploadFile", {
+                    method: "POST",
+                    body: formData
+                });
+
+                let result = await response.json();
+
+                if (result.success) {
+                    uploadStatus.innerText = "Upload successful!";
+                    setTimeout(() => window.location.href = "/", 1000);
+                } else {
+                    uploadStatus.innerText = "Upload failed: " + result.error;
+                }
+            } catch (error) {
+                uploadStatus.innerText = "Error uploading file.";
+            }
+        });
+    });
+</script>
