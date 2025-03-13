@@ -5,11 +5,15 @@
 <div class="container">
     <!-- Left Side: Toolbar -->
     <div class="toolbar">
-        <button onclick="formatText('bold')"><b>B</b></button>
-        <button onclick="formatText('italic')"><i>I</i></button>
-        <button onclick="formatText('underline')"><u>U</u></button>
-        <button onclick="askAI()" class="ai-btn">🤖 AI</button>
+        <button id="boldBtn"><b>B</b></button>
+        <button id="italicBtn"><i>I</i></button>
+        <button id="underlineBtn"><u>U</u></button>
+        <button id="aiBtn">AI</button>
     </div>
+
+    <!-- Load JavaScript -->
+    <script src="~/js/site.js"></script>
+
 
     <!-- Right Side: PDF Content Display -->
     <div class="pdf-content">
