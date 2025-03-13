@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Scanx_mvc.Models;  // Add this line
+using Scanx_mvc.Models; // ✅ Use the correct namespace
 
 namespace Scanx_mvc.Controllers
 {
@@ -23,18 +23,18 @@ namespace Scanx_mvc.Controllers
                 Directory.CreateDirectory(uploadPath);
             }
 
-            // Get list of uploaded PDFs
+            // Ensure you're using Models.PdfFile
             var pdfFiles = Directory.GetFiles(uploadPath, "*.pdf")
-                                    .Select(file => new PdfFile
+                                    .Select(file => new PdfFile  // ✅ Correct class from Models
                                     {
                                         FileName = Path.GetFileName(file),
                                         FilePath = $"/uploads/{Path.GetFileName(file)}"
                                     })
                                     .ToList();
 
-            // 🔹 Fix: Ensure the correct view is returned
-            return View(pdfFiles); // ✅ This now returns List<Models.PdfFile>
+            return View(pdfFiles); // ✅ Ensure View is expecting List<Models.PdfFile>
         }
+
 
         [HttpPost]
         public IActionResult UploadPdf(IFormFile file)
