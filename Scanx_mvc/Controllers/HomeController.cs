@@ -28,16 +28,18 @@ public class HomeController : Controller
     }
     public class HomeController : Controller
     {
-        public HomeController() // ✅ Constructor is fine without return statement
-        {
-            // Any initialization code here (if needed)
-        }
+        // REMOVE THIS CONSTRUCTOR IF IT'S NOT NEEDED
+        // public HomeController()
+        // {
+        //     // Any initialization code here
+        // }
 
         public IActionResult Index()
         {
             return View();
         }
     }
+
 
 
 
