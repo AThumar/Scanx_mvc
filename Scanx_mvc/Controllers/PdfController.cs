@@ -55,12 +55,31 @@ namespace Scanx_mvc.Controllers
                 file.CopyTo(stream);
             }
 
+            // Store uploaded file details in session or database
             TempData["Message"] = "File uploaded successfully!";
-            return RedirectToAction("Index");
+
+            // ✅ Redirect to dashboard after successful upload
+            return RedirectToAction("Dashboard");
+        }
+        public IActionResult Dashboard()
+        {
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
+
+            if (!Directory.Exists(uploadsFolder))
+            {
+                Directory.CreateDirectory(uploadsFolder);
+            }
+
+            var files = Directory.GetFiles(uploadsFolder)
+                                 .Select(Path.GetFileName)
+                                 .ToList();
+
+            return View(files); // Pass list of PDFs to the View
         }
 
 
-            }
 
     }
+
+}
 

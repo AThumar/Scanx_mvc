@@ -1,0 +1,29 @@
+﻿@model List<string>
+
+<h2>Uploaded PDFs</h2>
+
+<div class="pdf-list">
+    @foreach (var file in Model)
+    {
+        <div class="pdf-item">
+            <img src="~/images/pdf-icon.png" alt="PDF" width="50" />
+            <p>@file</p>
+            <a href="~/uploads/@file" target="_blank">View</a>
+        </div>
+    }
+</div>
+
+<style>
+    .pdf-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .pdf-item {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+    }
+</style>
+
