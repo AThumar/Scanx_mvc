@@ -1,85 +1,28 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using iTextSharp.text.pdf;
+using iTextSharp.text.pdf.parser;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.IO;
 
-namespace Scanx_mvc.Controllers
+public class PdfController : Controller
 {
-    public class PdfController : Controller
+    public IActionResult Viewer(string fileName)
     {
-        private readonly string _uploadPath;
-
-        public PdfController()
-        {
-            _uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
-            if (!Directory.Exists(_uploadPath))
-            {
-                Directory.CreateDirectory(_uploadPath);
-            }
-        }
-
-        public IActionResult Index()
-        {
-            var files = Directory.GetFiles(_uploadPath);
-            List<string> fileNames = new List<string>();
-
-            foreach (var file in files)
-            {
-                fileNames.Add(Path.GetFileName(file));
-            }
-
-            ViewBag.UploadedFiles = fileNames;
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult Upload(IFormFile file)
-        {
-            if (file == null || file.Length == 0)
-            {
-                TempData["Error"] = "Please select a valid file.";
-                return RedirectToAction("Index");
-            }
-
-            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
-            if (!Directory.Exists(uploadsFolder))
-            {
-                Directory.CreateDirectory(uploadsFolder);
-            }
-
-            var filePath = Path.Combine(uploadsFolder, file.FileName);
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                file.CopyTo(stream);
-            }
-
-            // Store uploaded file details in session or database
-            TempData["Message"] = "File uploaded successfully!";
-
-            // ✅ Redirect to dashboard after successful upload
-            return RedirectToAction("Dashboard");
-        }
-        public IActionResult Dashboard()
-        {
-            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
-
-            if (!Directory.Exists(uploadsFolder))
-            {
-                Directory.CreateDirectory(uploadsFolder);
-            }
-
-            var files = Directory.GetFiles(uploadsFolder)
-                                 .Select(Path.GetFileName)
-                                 .ToList();
-
-            return View(files); // Pass list of PDFs to the View
-        }
-
-
-
+        string filePath = Path.Combine("wwwroot/uploads", fileName);
+        ViewBag.PdfPath = "/uploads/" + fileName;
+        ViewBag.PdfText = ExtractTextFromPdf(filePath); // Store extracted text for AI search
+        return View();
     }
 
+    private string ExtractTextFromPdf(string filePath)
+    {
+        using (PdfReader reader = new PdfReader(filePath))
+        {
+            string text = "";
+            for (int i = 1; i <= reader.NumberOfPages; i++)
+            {
+                text += PdfTextExtractor.GetTextFromPage(reader, i);
+            }
+            return text;
+        }
+    }
 }
-
