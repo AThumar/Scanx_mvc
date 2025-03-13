@@ -1,0 +1,74 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <!-- Left Side: Toolbar -->
+    <div class="toolbar">
+        <button onclick="formatText('bold')"><b>B</b></button>
+        <button onclick="formatText('italic')"><i>I</i></button>
+        <button onclick="formatText('underline')"><u>U</u></button>
+        <button onclick="askAI()" class="ai-btn">🤖 AI</button>
+    </div>
+
+    <!-- Right Side: PDF Content Display -->
+    <div class="pdf-content">
+        <iframe id="pdfViewer" src="" width="100%" height="600px"></iframe>
+    </div>
+</div>
+
+<!-- AI Answer Display -->
+<div id="aiAnswer" class="ai-answer"></div>
+
+<style>
+    .container {
+        display: flex;
+        height: 100vh;
+    }
+
+    /* Left Toolbar */
+    .toolbar {
+        width: 250px;
+        background: #f4f4f4;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+    }
+
+        .toolbar button {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background: white;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+            .toolbar button:hover {
+                background: #ddd;
+            }
+
+    .ai-btn {
+        background: #4CAF50;
+        color: white;
+    }
+
+    /* PDF Content */
+    .pdf-content {
+        flex-grow: 1;
+        padding: 20px;
+    }
+
+    /* AI Answer */
+    .ai-answer {
+        margin-top: 20px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        background: #fff;
+        display: none;
+    }
+</style>
