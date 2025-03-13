@@ -32,7 +32,7 @@ namespace Scanx_mvc.Controllers
                                     .ToList();
 
             // 🔹 Fix: Ensure the correct view is returned
-            return View("Uploadpdf", pdfFiles);
+            return View("Upload", pdfFiles);
         }
 
         [HttpPost]
