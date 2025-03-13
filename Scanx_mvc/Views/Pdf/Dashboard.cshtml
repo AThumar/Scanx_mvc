@@ -1,4 +1,6 @@
-﻿@model List<string>
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
 <h2>Uploaded PDFs</h2>
 
@@ -12,18 +14,3 @@
         </div>
     }
 </div>
-
-<style>
-    .pdf-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-
-    .pdf-item {
-        border: 1px solid #ddd;
-        padding: 10px;
-        text-align: center;
-    }
-</style>
-
