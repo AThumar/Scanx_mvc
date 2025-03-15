@@ -1,0 +1,102 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model string
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Work</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/custom.css" />
+    <style>
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #f4f4f4;
+            padding: 20px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            overflow-y: auto;
+        }
+
+        .content {
+            margin-left: 270px;
+            padding: 30px;
+            flex-grow: 1;
+        }
+
+        .pdf-viewer {
+            width: 100%;
+            height: 500px;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        .notes-section {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .notes {
+            width: 40%;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            min-height: 300px;
+            background: #f9f9f9;
+        }
+
+        .work-description {
+            width: 60%;
+            padding: 15px;
+            border: 1px solid black;
+            border-radius: 8px;
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>ScanX</h2>
+            <ul>
+                <li><a href="@Url.Action("Dashboard", "Pdf")">Dashboard</a></li>
+                <li><a href="@Url.Action("Upload", "Pdf")">Upload PDF</a></li>
+                <li><a href="#">Settings</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <h1>Work</h1>
+
+            <!-- PDF Viewer -->
+            <iframe src="~/uploads/@Model" class="pdf-viewer"></iframe>
+
+            <!-- Notes and Work Description -->
+            <div class="notes-section">
+                <div class="notes">
+                    <p><strong>Write Notes Here...</strong></p>
+                    <textarea style="width: 100%; height: 250px;"></textarea>
+                </div>
+
+                <div class="work-description">
+                    <p>Here’s a more detailed write-up about your work, expanding on your projects, skills, and aspirations:</p>
+                    <p><strong>About My Work</strong></p>
+                    <p>I am a UI/UX designer and a 3rd-year Computer Engineering student...</p>
+                    <!-- Add more content here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

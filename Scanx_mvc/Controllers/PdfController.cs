@@ -15,14 +15,30 @@ namespace Scanx_mvc.Controllers
             _env = env;
         }
 
-        public IActionResult Upload()
+        [HttpGet, HttpPost]
+        public IActionResult Upload(IFormFile? file)
         {
             string uploadPath = Path.Combine(_env.WebRootPath, "uploads");
+
             if (!Directory.Exists(uploadPath))
             {
                 Directory.CreateDirectory(uploadPath);
             }
 
+            // ✅ Handle file upload (POST request)
+            if (file != null && file.Length > 0)
+            {
+                string filePath = Path.Combine(uploadPath, file.FileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                }
+
+                return RedirectToAction("Upload"); // Refresh the page to show the updated list
+            }
+
+            // ✅ Fetch all uploaded PDFs (GET request)
             var pdfFiles = Directory.GetFiles(uploadPath, "*.pdf")
                                     .Select(file => new PdfFile
                                     {
@@ -31,29 +47,32 @@ namespace Scanx_mvc.Controllers
                                     })
                                     .ToList();
 
-            return View("Upload", pdfFiles);  // ✅ Ensure "Upload" is explicitly returned
+            return View("Upload", pdfFiles); // ✅ Load "Upload.cshtml" with the updated file list
         }
 
-
-        [HttpPost]
-        public IActionResult UploadPdf(IFormFile file)
+        public IActionResult ViewPdf(string fileName)
         {
-            if (file != null && file.Length > 0)
-            {
-                string uploadPath = Path.Combine(_env.WebRootPath, "uploads");
-                if (!Directory.Exists(uploadPath))
-                {
-                    Directory.CreateDirectory(uploadPath);
-                }
+          
 
-                string filePath = Path.Combine(uploadPath, file.FileName);
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    file.CopyTo(stream);
-                }
+            return View("ViewPdf", fileName);
+        }
+        public IActionResult Dashboard()
+        {
+            string uploadPath = Path.Combine(_env.WebRootPath, "uploads");
+
+            if (!Directory.Exists(uploadPath))
+            {
+                Directory.CreateDirectory(uploadPath);
             }
 
-            return RedirectToAction("Upload");
+            // Fetch all PDF files dynamically
+            var pdfFiles = Directory.GetFiles(uploadPath, "*.pdf")
+                                    .Select(Path.GetFileName)
+                                    .ToList();
+
+            return View(pdfFiles);  // ✅ Pass the latest files to the Dashboard view
         }
+
+
     }
 }

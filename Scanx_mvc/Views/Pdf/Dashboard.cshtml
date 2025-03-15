@@ -1,17 +1,23 @@
-﻿
-@{
+﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Uploaded PDFs</h2>
 
 <div class="pdf-list">
-    @foreach (var file in Model)
+    @if (Model != null && Model.Count > 0)
     {
-        <div class="pdf-item">
-            <img src="~/images/pdf-icon.png" alt="PDF" />
-            <p>@file</p>
-            <a href="~/uploads/@file" target="_blank">View</a>
-        </div>
+        @foreach (var file in Model)
+        {
+            <div class="pdf-item">
+                <img src="~/images/pdf-icon.png" alt="PDF" />
+                <p>@file</p>
+                <a href="@Url.Action("ViewPdf", "Pdf", new { fileName = file })">View PDF</a>
+            </div>
+        }
+    }
+    else
+    {
+        <p>No PDFs uploaded yet.</p>
     }
 </div>

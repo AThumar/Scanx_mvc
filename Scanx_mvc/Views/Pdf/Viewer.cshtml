@@ -1,113 +1,49 @@
-﻿@{
+﻿@model string
+
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container">
-    <!-- Left Side: Toolbar -->
-    <div class="toolbar">
-        <button id="boldBtn"><b>B</b></button>
-        <button id="italicBtn"><i>I</i></button>
-        <button id="underlineBtn"><u>U</u></button>
-        <button id="aiBtn">AI</button>
-    </div>
+<div class="content">
+    <h1>Work</h1>
 
-    <!-- Load JavaScript -->
-    <script src="~/js/site.js"></script>
+    <div class="pdf-container">
+        <!-- PDF Viewer -->
+        <iframe src="~/uploads/@Model" class="pdf-viewer"></iframe>
 
-
-    <!-- Right Side: PDF Content Display -->
-    <div class="pdf-content">
-        <iframe id="pdfViewer" src="" style="width:100%; height:600px;"></iframe>
+        <!-- Notes Section -->
+        <div class="notes-section">
+            <h3>Write Notes Here...</h3>
+            <textarea placeholder="Start writing your notes..." class="notes-box"></textarea>
+        </div>
     </div>
 </div>
 
-<!-- AI Answer Display -->
-<div id="aiAnswer" class="ai-answer"></div>
-
 <style>
-    .container {
+    .pdf-container {
         display: flex;
-        height: 100vh;
-    }
-
-    /* Left Toolbar */
-    .toolbar {
-        width: 250px;
-        background: #f4f4f4;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        align-items: center;
-    }
-
-        .toolbar button {
-            width: 80%;
-            padding: 10px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            background: white;
-            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-            .toolbar button:hover {
-                background: #ddd;
-            }
-
-    .ai-btn {
-        background: #4CAF50;
-        color: white;
-    }
-
-    /* PDF Content */
-    .pdf-content {
-        flex-grow: 1;
-        padding: 20px;
-    }
-
-    /* AI Answer */
-    .ai-answer {
+        gap: 20px;
         margin-top: 20px;
-        padding: 10px;
+    }
+
+    .pdf-viewer {
+        width: 60%;
+        height: 80vh;
+        border: 1px solid #ddd;
+    }
+
+    .notes-section {
+        width: 35%;
+        background: #f9f9f9;
+        padding: 15px;
         border: 1px solid #ccc;
-        background: #fff;
-        display: none;
+        border-radius: 8px;
+    }
+
+    .notes-box {
+        width: 100%;
+        height: 70vh;
+        padding: 10px;
+        font-size: 16px;
     }
 </style>
-<script>
-    // Load PDF into the viewer dynamically
-    function loadPDF(pdfUrl) {
-        document.getElementById("pdfViewer").src = pdfUrl;
-    }
-
-    // Text Formatting
-      function formatText(command) {
-        if (command === 'bold' || command === 'italic' || command === 'underline') {
-            document.execCommand(command, false, null); // May not work in future browsers
-        } else {
-            alert("Unsupported format command.");
-        }
-    }
-
-    // AI Answering Functionality
-    function askAI() {
-        let selectedText = window.getSelection().toString().trim();
-        if (selectedText === "") {
-            alert("Please select a question from the document first.");
-            return;
-        }
-
-        // Simulate AI searching from the document content
-        let pdfText = "This is sample text extracted from the uploaded document. Steve Jobs founded Apple."; // Example Text
-        let aiAnswerBox = document.getElementById("aiAnswer");
-
-        if (pdfText.includes(selectedText)) {
-            aiAnswerBox.innerHTML = `<strong>AI Answer:</strong> ${selectedText} exists in the document.`;
-        } else {
-            aiAnswerBox.innerHTML = `<strong>AI Answer:</strong> No matching answer found in the document.`;
-        }
-        aiAnswerBox.style.display = "block";
-    }
-</script>
