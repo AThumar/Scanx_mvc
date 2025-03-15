@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@Html.Partial("_Sidebar")
+
+<!DOCTYPE html>
 <html>
 <head>
     <title>@ViewData["Title"] - ScanX</title>
@@ -94,16 +96,7 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="sidebar">
-            <h2>ScanX</h2>
-            <ul>
-                <li><a href="@Url.Action("Dashboard", "Pdf")">Dashboard</a></li>
-                <li><a href="@Url.Action("Upload", "Pdf")">Upload PDF</a></li>
-                <li><a href="#">Settings</a></li>
-
-            </ul>
-        </div>
+  
         <div class="content">
             @RenderBody()  <!-- This will load the Dashboard content -->
         </div>
