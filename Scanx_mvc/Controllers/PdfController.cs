@@ -23,7 +23,6 @@ namespace Scanx_mvc.Controllers
                 Directory.CreateDirectory(uploadPath);
             }
 
-            // ✅ Now correctly using Scanx_mvc.Models.PdfFile
             var pdfFiles = Directory.GetFiles(uploadPath, "*.pdf")
                                     .Select(file => new PdfFile
                                     {
@@ -32,8 +31,9 @@ namespace Scanx_mvc.Controllers
                                     })
                                     .ToList();
 
-            return View(pdfFiles);
+            return View("Upload", pdfFiles);  // ✅ Ensure "Upload" is explicitly returned
         }
+
 
         [HttpPost]
         public IActionResult UploadPdf(IFormFile file)
