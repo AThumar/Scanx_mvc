@@ -10,7 +10,7 @@
     @foreach (var file in Model)
     {
         <div class="pdf-item">
-            <img src="~/images/pdf-icon.png" alt="PDF" />
+            <img src="~/images/pdf-icon.png" alt="PDF" onerror="this.onerror=null; this.src='/default-pdf-icon.png';">
             <p>@file</p>
             <a href="@Url.Action("ViewPdf", "Pdf", new { fileName = file })">View PDF</a>
         </div>

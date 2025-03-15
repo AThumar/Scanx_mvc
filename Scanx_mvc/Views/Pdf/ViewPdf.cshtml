@@ -5,49 +5,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View PDF</title>
+    <title>View PDF - ScanX</title>
     <style>
-        /* Make sure this page does not show the sidebar */
-        body {
+        /* Full screen styling */
+        body, html {
             margin: 0;
             padding: 0;
+            width: 100vw;
+            height: 100vh;
             font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
         }
 
         .container {
             display: flex;
+            width: 100vw;
             height: 100vh;
         }
 
-        /* Notes section on the LEFT */
+        /* Notes Section (LEFT now) */
         .notes-section {
-            width: 50%;
+            width: 45%;
             padding: 20px;
+            background: #ffffff;
             overflow-y: auto;
-            background: #f8f9fa; /* Light background */
+            box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
         }
 
-        /* PDF viewer on the RIGHT */
+            .notes-section h2 {
+                font-size: 22px;
+                margin-bottom: 10px;
+            }
+
+        textarea {
+            width: 100%;
+            height: 80%;
+            font-size: 16px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: white;
+            resize: none;
+        }
+
+        /* PDF Viewer (RIGHT now) */
         .pdf-viewer {
-            width: 50%;
+            width: 55%;
             height: 100%;
-            border-left: 2px solid #ccc;
+            background: #333;
+            display: flex;
+            overflow: auto;
         }
 
         iframe {
             width: 100%;
             height: 100%;
             border: none;
-        }
-
-        textarea {
-            width: 100%;
-            height: 70%;
-            font-size: 16px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background: white;
         }
     </style>
 </head>
@@ -61,7 +74,7 @@
 
         <!-- Right: PDF Viewer -->
         <div class="pdf-viewer">
-            <iframe src="~/uploads/@Model.FileName" frameborder="0"></iframe>
+            <iframe src="~/uploads/@Model.FileName" width="100%" height="100%"></iframe>
         </div>
     </div>
 </body>
