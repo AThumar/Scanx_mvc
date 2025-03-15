@@ -1,10 +1,5 @@
 ﻿@model PdfViewModel
 
-@{
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    string pdfFileName = ViewBag.PdfFileName;
-}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,24 +7,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View PDF</title>
     <style>
-        /* Split the screen into two equal parts */
+        /* Make sure this page does not show the sidebar */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
         .container {
             display: flex;
             height: 100vh;
         }
 
-        /* Left side for PDF */
-        .pdf-viewer {
-            width: 50%;
-            height: 100%;
-            border-right: 2px solid #ccc;
-        }
-
-        /* Right side for notes */
+        /* Notes section on the LEFT */
         .notes-section {
             width: 50%;
             padding: 20px;
             overflow-y: auto;
+            background: #f8f9fa; /* Light background */
+        }
+
+        /* PDF viewer on the RIGHT */
+        .pdf-viewer {
+            width: 50%;
+            height: 100%;
+            border-left: 2px solid #ccc;
         }
 
         iframe {
@@ -38,26 +40,28 @@
             border: none;
         }
 
-        /* Notes text area */
         textarea {
             width: 100%;
             height: 70%;
             font-size: 16px;
             padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: white;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Left: PDF Viewer -->
-        <div class="pdf-viewer">
-            <iframe src="~/uploads/@Model.FileName" frameborder="0"></iframe>
-        </div>
-
-        <!-- Right: Notes Section -->
+        <!-- Left: Notes Section -->
         <div class="notes-section">
             <h2>Notes</h2>
             <textarea placeholder="Write your notes here..."></textarea>
+        </div>
+
+        <!-- Right: PDF Viewer -->
+        <div class="pdf-viewer">
+            <iframe src="~/uploads/@Model.FileName" frameborder="0"></iframe>
         </div>
     </div>
 </body>
