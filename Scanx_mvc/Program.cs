@@ -13,7 +13,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+app.UseStaticFiles(); // This ensures files in wwwroot/ are served
 
 app.UseRouting();
 

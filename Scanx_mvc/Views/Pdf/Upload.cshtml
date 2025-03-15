@@ -1,4 +1,4 @@
-﻿@model List<Scanx_mvc.Models.PdfFile>
+﻿@model List<PdfFile>
 
 @{
     ViewData["Title"] = "Uploaded PDFs";
@@ -9,18 +9,17 @@
 <!-- PDF List -->
 <div class="pdf-list">
     @if (Model != null && Model.Count > 0)
-    {
-        @foreach (var pdf in Model)
+        @foreach (var file in Model)
         {
             <div class="pdf-item">
-                <img src="https://img.icons8.com/ios-filled/50/000000/pdf.png" alt="PDF Icon">
-                <h5>@pdf.FileName</h5>
-                <a href="@pdf.FilePath" target="_blank" class="btn btn-outline-primary">View PDF</a>
+                <a href="@Url.Action("ViewPdf", "Pdf", new { fileName = file.FileName })">
+                    <img src="~/images/pdf-icon.png" alt="PDF" onerror="this.src='/images/default-pdf.png'">
+                    <p>@file.FileName</p>
+                </a>
             </div>
         }
+
+
     }
-    else
-    {
-        <p>No PDFs uploaded yet.</p>
-    }
+    
 </div>

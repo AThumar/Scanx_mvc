@@ -52,10 +52,18 @@ namespace Scanx_mvc.Controllers
 
         public IActionResult ViewPdf(string fileName)
         {
-          
+            var filePath = Path.Combine("wwwroot/uploads", fileName);
+            if (!System.IO.File.Exists(filePath))
+            {
+                return NotFound();
+            }
 
-            return View("ViewPdf", fileName);
+            var fileBytes = System.IO.File.ReadAllBytes(filePath);
+            return File(fileBytes, "application/pdf");
         }
+
+
+
         public IActionResult Dashboard()
         {
             string uploadPath = Path.Combine(_env.WebRootPath, "uploads");
@@ -75,4 +83,5 @@ namespace Scanx_mvc.Controllers
 
 
     }
+
 }
