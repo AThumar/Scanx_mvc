@@ -52,15 +52,13 @@ namespace Scanx_mvc.Controllers
 
         public IActionResult ViewPdf(string fileName)
         {
-            var filePath = Path.Combine("wwwroot/uploads", fileName);
-            if (!System.IO.File.Exists(filePath))
+            var model = new PdfViewModel
             {
-                return NotFound();
-            }
-
-            var fileBytes = System.IO.File.ReadAllBytes(filePath);
-            return File(fileBytes, "application/pdf");
+                FileName = fileName
+            };
+            return View(model);
         }
+
 
 
 

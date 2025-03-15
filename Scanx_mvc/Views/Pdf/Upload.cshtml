@@ -9,15 +9,17 @@
 <!-- PDF List -->
 <div class="pdf-list">
     @if (Model != null && Model.Count > 0)
-        @foreach (var file in Model)
-        {
-            <div class="pdf-item">
-                <a href="@Url.Action("ViewPdf", "Pdf", new { fileName = file.FileName })">
-                    <img src="~/images/pdf-icon.png" alt="PDF" onerror="this.src='/images/default-pdf.png'">
-                    <p>@file.FileName</p>
-                </a>
-            </div>
-        }
+
+@foreach (var file in Model)
+{
+    <div class="pdf-item">
+        <a href="@Url.Action("ViewPdf", "Pdf", new { fileName = file.FileName })">
+            <img src="~/images/pdf-icon.png" alt="PDF" onerror="this.src='/images/default-pdf.png'">
+            <p>@file.FileName</p>
+        </a>
+    </div>
+}
+
 
 
     }

@@ -1,47 +1,64 @@
-﻿@{
+﻿@model PdfViewModel
+
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     string pdfFileName = ViewBag.PdfFileName;
 }
 
-<div class="pdf-chat-container">
-    <!-- Left Side: PDF Viewer -->
-    <div class="pdf-viewer">
-        <iframe src="~/uploads/@pdfFileName" class="pdf-frame"></iframe>
-    </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View PDF</title>
+    <style>
+        /* Split the screen into two equal parts */
+        .container {
+            display: flex;
+            height: 100vh;
+        }
 
-    <!-- Right Side: Chat & Notes -->
-    <div class="chat-section">
-        <div class="notes">
-            <p><strong>Write Notes Here...</strong></p>
-            <textarea class="notes-textarea" placeholder="Type your notes here..."></textarea>
+        /* Left side for PDF */
+        .pdf-viewer {
+            width: 50%;
+            height: 100%;
+            border-right: 2px solid #ccc;
+        }
+
+        /* Right side for notes */
+        .notes-section {
+            width: 50%;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Notes text area */
+        textarea {
+            width: 100%;
+            height: 70%;
+            font-size: 16px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Left: PDF Viewer -->
+        <div class="pdf-viewer">
+            <iframe src="~/uploads/@Model.FileName" frameborder="0"></iframe>
         </div>
 
-        <div class="chat-box">
-            <p><strong>Chat</strong></p>
-            <div class="messages"></div>
-            <input type="text" placeholder="Type your message..." class="chat-input" />
+        <!-- Right: Notes Section -->
+        <div class="notes-section">
+            <h2>Notes</h2>
+            <textarea placeholder="Write your notes here..."></textarea>
         </div>
     </div>
-</div>
-
-<style>
-    .pdf-chat-container {
-        display: flex;
-        height: 85vh;
-    }
-
-    .pdf-viewer {
-        width: 50%;
-    }
-
-    .pdf-frame {
-        width: 100%;
-        height: 100%;
-        border: none;
-    }
-
-    .chat-section {
-        width: 50%;
-        padding: 20px;
-    }
-</style>
+</body>
+</html>
