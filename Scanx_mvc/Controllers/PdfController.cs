@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Scanx_mvc.Models; // ✅ Use the correct namespace
+using Scanx_mvc.Models; // ✅ Correctly using the model namespace
 
 namespace Scanx_mvc.Controllers
 {
@@ -23,18 +23,17 @@ namespace Scanx_mvc.Controllers
                 Directory.CreateDirectory(uploadPath);
             }
 
-            // Ensure you're using Models.PdfFile
+            // ✅ Now correctly using Scanx_mvc.Models.PdfFile
             var pdfFiles = Directory.GetFiles(uploadPath, "*.pdf")
-                                    .Select(file => new PdfFile  // ✅ Correct class from Models
+                                    .Select(file => new PdfFile
                                     {
                                         FileName = Path.GetFileName(file),
                                         FilePath = $"/uploads/{Path.GetFileName(file)}"
                                     })
                                     .ToList();
 
-            return View(pdfFiles); // ✅ Ensure View is expecting List<Models.PdfFile>
+            return View(pdfFiles);
         }
-
 
         [HttpPost]
         public IActionResult UploadPdf(IFormFile file)
@@ -56,11 +55,5 @@ namespace Scanx_mvc.Controllers
 
             return RedirectToAction("Upload");
         }
-    }
-
-    public class PdfFile
-    {
-        public string FileName { get; set; }
-        public string FilePath { get; set; }
     }
 }
